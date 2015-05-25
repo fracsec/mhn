@@ -3,8 +3,6 @@
 set -e
 set -x
 
-apt-get update
-apt-get install -y git build-essential python-pip python-dev redis-server libgeoip-dev
 pip install virtualenv
 
 MHN_HOME=`dirname $0`/..
@@ -27,7 +25,6 @@ echo -e "\nInitializing database, please be patient. This can take several minut
 python initdatabase.py
 cd $MHN_HOME
 
-apt-get install -y nginx
 mkdir -p /opt/www
 cat > /etc/nginx/sites-available/default <<EOF 
 server {
@@ -51,8 +48,6 @@ server {
 }
 EOF
 ln -fs /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-
-apt-get install -y supervisor
 
 cat > /etc/supervisor/conf.d/mhn-uwsgi.conf <<EOF 
 [program:mhn-uwsgi]

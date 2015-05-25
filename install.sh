@@ -1,18 +1,50 @@
 #!/bin/bash
 
+#Check for root
 if [ "$(whoami)" != "root" ]
 then
     echo "You must be root to run this script"
     exit 1
 fi
 
+#Get processor information
+if [[ `uname -m` == "arm"* ]]; then
+	arm=true
+elif [[ `uname -m` == "x86"* ]]; then
+	x86=true
+else
+	echo "An incompatible processor has been identified"
+	exit 1
+fi
+
 set -e
+#Processor found
+echo `uname -m` processor identified
 
 MHN_HOME=$(dirname "$0")
 SCRIPTS="$MHN_HOME/scripts"
 cd "$SCRIPTS"
 
+#update and install packages needed independent of processor type
 echo "[`date`] Starting Installation of all MHN packages"
+apt-get update
+apt-get install -y libffi-dev python-pip python-dev supervisor golang mercurial make redis-server libgeoip-dev nginx
+
+#Initiate all required apt-get install calls
+if [ $arm == true ]; then
+	#Mongo requirements
+	apt-get install -y build-essential libboost-filesystem-dev libboost-program-options-dev libboost-system-dev libboost-thread-dev scons libboost-all-dev python-pymongo git
+	#Nodejs/coffeescript requirements
+	apt-get install -y libssl-dev git-core redis-server libexpat1-dev libicu-dev
+	echo "[`date`] ========= Installing Mongo ========="
+	./install_mongo_arm.sh
+	echo "[`date`] ========= Installing coffeescript ========="
+	./install_coffeescript.sh
+elif [ $x86 == true ]; then
+	apt-get install -y mongodb-org coffeescript
+	echo "[`date`] ========= Installing Mongo ========="
+	./install_mongo.sh
+fi
 
 echo "[`date`] ========= Installing hpfeeds ========="
 ./install_hpfeeds.sh
@@ -55,5 +87,3 @@ do
 done
 
 echo "[`date`] Completed Installation of all MHN packages"
-    
-

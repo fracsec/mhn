@@ -2,7 +2,6 @@
 
 set -x
 
-apt-get install -y git golang mercurial make coffeescript
 DEBIAN_FRONTEND=noninteractive apt-get install -y golang-go
 
 SECRET=`python -c 'import uuid;print str(uuid.uuid4()).replace("-","")'`
@@ -30,8 +29,6 @@ make
 
 mkdir -p /var/log/mhn
 
-apt-get install -y supervisor
-
 cat > /etc/supervisor/conf.d/honeymap.conf <<EOF 
 [program:honeymap]
 command=/opt/honeymap/server/server
@@ -43,7 +40,6 @@ autorestart=true
 startsecs=10
 EOF
 
-apt-get install -y libgeoip-dev
 /opt/hpfeeds/env/bin/pip install GeoIP
 
 cd /opt/
@@ -91,6 +87,3 @@ startsecs=10
 EOF
 
 supervisorctl update
-
-
-
