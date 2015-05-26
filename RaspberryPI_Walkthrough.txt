@@ -1,0 +1,25 @@
+Raspberry Pi 2
+
+Steps 1,2,3 performed on Linux
+1. Download and extract MiniBian image file
+	- https://minibianpi.wordpress.com/ (http://sourceforge.net/projects/minibian/files/2015-02-18-wheezy-minibian.tar.gz/download)
+	- tar zxf 2015-02-18-wheezy-minibian.tar.gz
+
+2. Write image to SD card
+	- dd bs=4M if=2015-05-05-raspbian-wheezy.img of=/dev/sdb
+	- Replace /dev/sdb with proper device (No partition number)
+
+3. Resize partitions
+	- Grow / partition with gparted to end of disk and shrink from front end to allow /boot to grow 
+	- Grow /boot partition to deallocated space from / partition
+	- Run check to fix any disk errors
+	
+4. Boot up Rasberry Pi with newly created SD card
+	- Change root password: passwd root
+		OR
+	- Create new user: adduser NAME
+	- Add new user to sudoers: vi /etc/group -> sudo:...:NAME
+	- Change root login to nologon: vi /etc/passwd -> root:...:/bin/nologon
+
+5. Start Building
+	- install.sh
