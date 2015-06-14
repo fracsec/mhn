@@ -41,6 +41,9 @@ if [ $arm == true ]; then
 	echo "[`date`] ========= Installing coffeescript ========="
 	./install_coffeescript.sh
 elif [ $x86 == true ]; then
+	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+	echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+	apt-get update
 	apt-get install -y mongodb-org coffeescript
 	echo "[`date`] ========= Installing Mongo ========="
 	./install_mongo.sh
